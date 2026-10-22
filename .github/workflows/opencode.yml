@@ -26,7 +26,7 @@ jobs:
           git commit -m "Auto-contribution $(date -u +%Y-%m-%d)"
           git push
       - name: Create PR
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Auto-contribution $(date -u +%Y-%m-%d)"
