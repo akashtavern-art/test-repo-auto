@@ -1,0 +1,36 @@
+name: opencode auto-contribution
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'  # daily at noon UTC
+
+jobs:
+  contribute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure git
+        run: |
+          git config user.name "akashtavern-art"
+          git config user.email "akashtavern@gmail.com"
+      - name: Create contribution
+        run: |
+          echo "# Auto-contribution $(date -u +%Y-%m-%d)" >> AUTO_CONTRIBUTION.md
+          git add AUTO_CONTRIBUTION.md
+          git commit -m "Auto-contribution $(date -u +%Y-%m-%d)"
+          git push
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Auto-contribution $(date -u +%Y-%m-%d)"
+          title: "Auto-contribution $(date -u +%Y-%m-%d)"
+          body: "Automated contribution for green box"
+          branch: auto-contribution-${{ github.run_id }}
+          delete-branch: true
